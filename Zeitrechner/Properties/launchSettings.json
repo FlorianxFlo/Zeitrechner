@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Zeitrechner": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
