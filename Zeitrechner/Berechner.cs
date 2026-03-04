@@ -5,7 +5,8 @@ namespace Zeitrechner
 {
     internal class Berechner
     {
-        
+        // ToDo:
+        // beschreibungen hinzufügen
         
         //public static void AusrechnenMitWerten()
         //{
