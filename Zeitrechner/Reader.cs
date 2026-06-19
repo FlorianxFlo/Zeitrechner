@@ -85,10 +85,10 @@
 
                 
 
-                if (Berechner.IstAusserhalbRandzeitÜberprüfen(eingeleseneZeit) == true)
+                if (Berechner.IstAusserhalbArbeitszeitUeberprüfen(eingeleseneZeit) == true)
                 {
                     Thread.Sleep(1000);
-                    Console.WriteLine("Die Eingesesene Zeit ist Außerhalb deiner Möglichen Arbeitszeit! Bitte geben sie eine Gültige Zeit ein");
+                    Console.WriteLine("Die Eingesesene Zeit ist Außerhalb deiner Möglichen Arbeitszeit! Bitte geben sie eine Gültige Zeit ein\n");
                     return readTimeFromConsole();
                 }
                 else

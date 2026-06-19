@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using System.Text.Json;
-using System.Runtime.CompilerServices;
-using System.Globalization;
-
-
-namespace Zeitrechner
+﻿namespace Zeitrechner
 {
     internal static class Settings
     {
@@ -75,29 +66,6 @@ namespace Zeitrechner
  //           }
         //}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public static void ProfilLaden()
         {
             Zeitrechner.ConfigMindJaehrigAktiv = false;
@@ -124,8 +92,6 @@ namespace Zeitrechner
                 Zeitrechner.ConfigANAktiv = true;
                 return;
             }
-
-
         }
 
 

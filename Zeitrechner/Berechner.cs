@@ -5,28 +5,7 @@ namespace Zeitrechner
 {
     internal class Berechner
     {
-        // ToDo:
-        // beschreibungen hinzufügen
-        
-        //public static void AusrechnenMitWerten()
-        //{
-        //    //Überprüft ob genug Angaben gemacht wurden
-        //    if (Zeitrechner.Speicher[0].Equals(Zeitrechner.standard) | Zeitrechner.Speicher[1].Equals(Zeitrechner.standard) | Zeitrechner.Speicher[2].Equals(Zeitrechner.standard))
-        //    {
-        //        Thread.Sleep(300);
-        //        Console.WriteLine("Die Berechnung ist nicht möglich, sie haben nicht genügend Zeitangaben gemacht. Sie können alternativ mit pauschalwerten Rechnen.");
-        //        return;
-        //    }
-        //
-        //    //läd die zeiten aus dem Speicher
-        //    TimeOnly berechnungszeit = Zeitrechner.Speicher[0];
-        //    TimeOnly pausenbeginn = Zeitrechner.Speicher[1];
-        //    TimeOnly pausenende = Zeitrechner.Speicher[2];
-        //
-        //
-        //}
-        
-        
+               
         
         public static void BerechneMitWerten() //Berechnet mit der angegebenen Pausenzeit 
         {
@@ -34,7 +13,7 @@ namespace Zeitrechner
             if (Zeitrechner.Speicher[0].Equals(Zeitrechner.standard) | Zeitrechner.Speicher[1].Equals(Zeitrechner.standard) | Zeitrechner.Speicher[2].Equals(Zeitrechner.standard))
             {
                 Thread.Sleep(300);
-                Console.WriteLine("Die Berechnung ist nicht möglich, sie haben nicht genügend Zeitangaben gemacht. Sie können alternativ mit pauschalwerten Rechnen.");
+                Console.WriteLine("Die Berechnung ist nicht möglich, sie haben nicht genügend Zeitangaben gemacht. Sie können alternativ mit Pauschalwerten rechnen.");
                 return;
             }
             
@@ -57,10 +36,10 @@ namespace Zeitrechner
                 {
                     Console.WriteLine("Die Zeitbuchuchung so ist ungültig! Du musst bereits nach 4,5 Stunden Pause machen");
                 }
-                else
-                {
+                else{
                     Console.WriteLine("Die Zeitbuchuchung so ist ungültig! Du musst bereits nach 6 stunden Pause machen");
                 }
+
                 Console.WriteLine("Du hättest spätestens um" + spätesterZeitpunktPause + " eine halbe Stunde Pause machen müssen ");
             }
 
@@ -81,13 +60,11 @@ namespace Zeitrechner
             //Gibt die Uhrzeit aus, ab wann 45 Minuten Pause benötigt werden //Die Config müsste eigentlich egal sein hier aber bei Azubi nochmal anders 
             if (pausenlaenge < Zeitrechner.Minuten45)
             {
-
-
-                if (Zeitrechner.ConfigDualiAktiv = true && ZeitBisLangePauseBenoetigt >= Zeitrechner.achtzehnUhr)
+                if (Zeitrechner.ConfigDualiAktiv == true && ZeitBisLangePauseBenoetigt >= Zeitrechner.achtzehnUhr)
                 {
                     Console.WriteLine("Da du nicht länger als 18 Uhr arbeiten darfst kannst du die Arbeitszeit von 9 Stunden Nicht erreichen!\n");
                 }
-                else if (Zeitrechner.ConfigANAktiv = true && ZeitBisLangePauseBenoetigt >= Zeitrechner.zwanzigUhr)
+                else if (Zeitrechner.ConfigANAktiv == true && ZeitBisLangePauseBenoetigt >= Zeitrechner.zwanzigUhr)
                 {
                     Console.WriteLine("Da du nicht Länger als 20 Uhr arbeiten darfst, kannst du die Arbeitszeit von 9 Stunden nicht erreichen!\n");
                 }
@@ -98,7 +75,7 @@ namespace Zeitrechner
             }
 
             TimeOnly ZeitZehnStundenErreicht = ArbeitsbeginnUndPause.Add(Zeitrechner.zehnStunden);
-            bool zeitpunktZuSpät = IstAusserhalbRandzeitÜberprüfen(ZeitZehnStundenErreicht);
+            bool zeitpunktZuSpät = IstAusserhalbArbeitszeitUeberprüfen(ZeitZehnStundenErreicht);
             if (Zeitrechner.ConfigDualiAktiv == true && zeitpunktZuSpät == true)
             {
                 Console.WriteLine("Du kannst die Maximalarbeitszeit von 10 Stunden nicht erreichen da der Zeitpunkt nach 18 Uhr wäre");
@@ -116,27 +93,21 @@ namespace Zeitrechner
         }
 
 
-        public static bool IstAusserhalbRandzeitÜberprüfen(TimeOnly zuUerberpruefendeZeit)
+        public static bool IstAusserhalbArbeitszeitUeberprüfen(TimeOnly zuUerberpruefendeZeit)
         {
             if (zuUerberpruefendeZeit.Equals(Zeitrechner.standard))
             {
                 Console.WriteLine("Sie haben die Zeit zurückgesetzt!");
-
                 return false;
-
             }
 
-            else if (Zeitrechner.ConfigMindJaehrigAktiv = true && (zuUerberpruefendeZeit > Zeitrechner.achtzehnUhr || zuUerberpruefendeZeit < Zeitrechner.siebenUhr))
+            else if ((Zeitrechner.ConfigMindJaehrigAktiv || Zeitrechner.ConfigDualiAktiv ) == true && (zuUerberpruefendeZeit > Zeitrechner.achtzehnUhr || zuUerberpruefendeZeit < Zeitrechner.siebenUhr))
             {
                 //Console.WriteLine("Der Zeitpunkt liegt außerhalb der gesetzlichen Zeit für Azubis und Dualis von 7 bis 18 Uhr!\n");
                 return true;
             }
-            else if (Zeitrechner.ConfigDualiAktiv = true && (zuUerberpruefendeZeit > Zeitrechner.achtzehnUhr || zuUerberpruefendeZeit < Zeitrechner.siebenUhr))
-            {
-                //Console.WriteLine("Der Zeitpunkt liegt außerhalb der gesetzlichen Zeit für Azubis und Dualis von 7 bis 18 Uhr!\n");
-                return true;
-            }
-            else if (Zeitrechner.ConfigANAktiv = true && (zuUerberpruefendeZeit > Zeitrechner.zwanzigUhr || zuUerberpruefendeZeit < Zeitrechner.sechsUhr))
+            
+            else if (Zeitrechner.ConfigANAktiv == true && (zuUerberpruefendeZeit > Zeitrechner.zwanzigUhr || zuUerberpruefendeZeit < Zeitrechner.sechsUhr))
             {
                 //Console.WriteLine("Der Zeitpunkt liegt außerhalb der gesetzlichen Arbeitszeit von 6 bis 20 Uhr!\n");
                 return true;
@@ -161,7 +132,7 @@ namespace Zeitrechner
         }
 
         public static TimeOnly berechneZeitpunktPause()
-        {   //Berechnet den Zeitpunkt wann spätestens eine Pause gemacht werden muss (6 Stunden)
+        {   //Berechnet den Zeitpunkt wann spätestens eine Pause gemacht werden muss (4,5 Stunden bzw. 6 Stunden)
 
             try
             {
@@ -179,7 +150,7 @@ namespace Zeitrechner
                     TimeOnly MJZeitpunkt30MinPause = arbeitsbeginn.Add(Zeitrechner.vierandhalbStunden);
                     
                     TimeOnly MJZeitpunkt60MinPause = arbeitsbeginn.Add(Zeitrechner.sechsStunden);
-                    bool ungueltig = IstAusserhalbRandzeitÜberprüfen(MJZeitpunkt30MinPause);
+                    bool ungueltig = IstAusserhalbArbeitszeitUeberprüfen(MJZeitpunkt30MinPause);
                     if (ungueltig)
                     {
                         return Zeitrechner.standard;                    
@@ -190,7 +161,7 @@ namespace Zeitrechner
                 else
                 {
                     TimeOnly zeitpunktPause = arbeitsbeginn.Add(+Zeitrechner.sechsStunden);
-                    bool ungueltig = IstAusserhalbRandzeitÜberprüfen(zeitpunktPause);
+                    bool ungueltig = IstAusserhalbArbeitszeitUeberprüfen(zeitpunktPause);
                     if (ungueltig)
                     {
                         return Zeitrechner.standard;
@@ -204,13 +175,6 @@ namespace Zeitrechner
                 return Zeitrechner.standard;
             }
         }
-
-
-
-
-
-
-
 
 
         public static void PauschalBerechnen30Minuten() //Berechnet den Pausenzeitpunkt mit einer Pauschalpausenlänge von 30 Minuten 
@@ -235,16 +199,11 @@ namespace Zeitrechner
             Console.WriteLine("Die Pauschalberechnung mit 45 Minuten Pause wird durchgeführt\n");
             PauschalBerechnen(Zeitrechner.Minuten45);
         }
-
-
-        public static void PauschalBerechnen60Minuten()
+        public static void PauschalBerechnen60Minuten() //Berechnet den Pausenzeitpunkt mit einer Pauschalpausenlänge von 60 Minuten
         {
             Console.WriteLine("Die Pauschalberechnung mit 60 Minuten Pause wird durchgeführt\n");
             PauschalBerechnen(Zeitrechner.Minuten60);
         }
-
-
-
 
         public static void PauschalBerechnen(TimeSpan pausenlaenge) //Berechnet den Pausenzeitpunkt pauschal mit der Eingabelänge
         {
@@ -262,7 +221,7 @@ namespace Zeitrechner
 
             TimeOnly FrühstesArbeitsende = ArbeitsbeginnUndPause.Add(Zeitrechner.regelarbeitszeit);
             Console.WriteLine("Um " + FrühstesArbeitsende + " Uhr ist die Regelarbeitszeit erreicht");
-            if (IstAusserhalbRandzeitÜberprüfen(FrühstesArbeitsende))
+            if (IstAusserhalbArbeitszeitUeberprüfen(FrühstesArbeitsende))
             {
                 Console.WriteLine("Du kannst die Regelarbeitszeit nichtmehr erreichen, da sie außerhalb des gesetzlich erlaubten Zeitraumes ist.\n");
                 return;
@@ -280,18 +239,16 @@ namespace Zeitrechner
                 //Berechnet wann 45 Minuten Pause Benötigt werden. 
                 TimeOnly Uhrzeit45MinutenPause = ArbeitsbeginnUndPause.Add(Zeitrechner.NeunStunden);
 
-                bool ZeitIstAusserhalb = IstAusserhalbRandzeitÜberprüfen(Uhrzeit45MinutenPause);
-
-
+                bool ZeitIstAusserhalb = IstAusserhalbArbeitszeitUeberprüfen(Uhrzeit45MinutenPause);
 
 
                 //Gibt die Uhrzeit aus, ab wann 45 Minuten Pause benötigt werden
-                if (Zeitrechner.ConfigDualiAktiv = true && ZeitIstAusserhalb == true)
+                if (Zeitrechner.ConfigDualiAktiv == true && ZeitIstAusserhalb == true)
                 {
                     Console.WriteLine("Da du nicht länger als 18 Uhr arbeiten darfst kannst du die Arbeitszeit von 9 Stunden Nicht erreichen!\n");
                     return;
                 }
-                else if(Zeitrechner.ConfigANAktiv = true && ZeitIstAusserhalb == true)
+                else if(Zeitrechner.ConfigANAktiv == true && ZeitIstAusserhalb == true)
                 {
                     Console.WriteLine("Da du nicht länger als 20 Uhr arbeiten darst kannst du die Arbeitszeit von 9 Stunden nicht erreichen!\n");
                     return;                
@@ -304,7 +261,7 @@ namespace Zeitrechner
             else
             {
              TimeOnly ArbeitszeitNeunStunden = ArbeitsbeginnUndPause.Add(Zeitrechner.NeunStunden);
-             if (IstAusserhalbRandzeitÜberprüfen(ArbeitszeitNeunStunden))
+             if (IstAusserhalbArbeitszeitUeberprüfen(ArbeitszeitNeunStunden))
                 {
                     Console.WriteLine("Du kannst die Arbeitszeit von 9 Stunden nicht erreichen, da sie außerhalb der erlaubten Arbeitszeit wäre");
                 }
@@ -312,7 +269,7 @@ namespace Zeitrechner
                 {
                     Console.WriteLine("Um " + ArbeitszeitNeunStunden + " Uhr sind 9 Stunden Arbeitszeit erreicht");
                     TimeOnly ArbeitszeitZehnStunden = ArbeitsbeginnUndPause.Add(Zeitrechner.zehnStunden);
-                    if (IstAusserhalbRandzeitÜberprüfen(ArbeitszeitZehnStunden))
+                    if (IstAusserhalbArbeitszeitUeberprüfen(ArbeitszeitZehnStunden))
                     {
                         Console.WriteLine("Du kannst die Maximalarbeitszeit von 10 Stunden nicht erreichen, da sie außerhalb der erlaubten Arbeitszeit wäre");
                     }
@@ -354,7 +311,7 @@ namespace Zeitrechner
                 TimeOnly pausenende = Zeitrechner.Speicher[2];
                 TimeOnly heimgehzeit = Zeitrechner.Speicher[3];
 
-                if (IstAusserhalbRandzeitÜberprüfen(ankunftszeit) || IstAusserhalbRandzeitÜberprüfen(heimgehzeit))
+                if (IstAusserhalbArbeitszeitUeberprüfen(ankunftszeit) || IstAusserhalbArbeitszeitUeberprüfen(heimgehzeit))
                 {
                     Console.WriteLine("Die eingegebenen Zeitpunkte im Speicher sind außerhalb der möglichen Arbeitszeit");
                     return;
@@ -382,7 +339,7 @@ namespace Zeitrechner
                 if (Arbeitslaenge < Zeitrechner.regelarbeitszeit)
                 {
                     Console.Write("Regelarbeitszeit: ");
-                    if ((IstAusserhalbRandzeitÜberprüfen(ArbeitsbeginnUndPause.Add(Zeitrechner.regelarbeitszeit)) == false))
+                    if ((IstAusserhalbArbeitszeitUeberprüfen(ArbeitsbeginnUndPause.Add(Zeitrechner.regelarbeitszeit)) == false))
                     {
                         Console.WriteLine("Die Regelarbeitszeit ist nicht erreicht!\n Es fehlen " + (Zeitrechner.regelarbeitszeit - Arbeitslaenge) + "Minuten");
                     }
@@ -402,6 +359,7 @@ namespace Zeitrechner
                     Console.WriteLine("Wenn du um diese Uhrzeit gehst, brauchst du 45 minuten pause. Du hast weniger als 45 Minuten pause gemacht.\nDir fehlen " + (Zeitrechner.Minuten45 - pausenlaenge) + " Minuten!");
 
                 }
+                Console.WriteLine();
                 //hier einfügen: check anhand arbeitsstunden wie viel pause benötigt wird und ob das so passt 
 
 
@@ -409,8 +367,7 @@ namespace Zeitrechner
 
 
             }
-            //Wenn weniger als 4 stunden arbeitszeit dann ganzer gleitzeittag verbraucht (Mindestarbeitszeit)
-            //Kernarbeitszeiten checken lassen auch bei den oben. Mo bis Do: 9 bis 15 uhr Freitags: 9 bis 13 Uhr
+            
 
 
         }

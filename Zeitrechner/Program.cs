@@ -1,28 +1,35 @@
 ﻿namespace Zeitrechner;
 
-//TimeOnly Temp = eingeleseneZeit.AddMinutes(30);
 
-//Feature List:     - Wenn heimgehzeit eingegeben dann soll stundenberechnung möglich sein
-//                  - 10 Stundengrenze einfügen
-//                  Speicher soll speicherbar sein als datei!
-//                  Speicher vom Letzten mal einlesen möglich machen!
-//                  Config datei für globale, persistente einstellungen (Unter18, in ausbildung oder duali, Regelarbeitszeit
-//                  Genaue SAP berechnungen mit eingliedern
-//                  - Berechnungsmöglichkeiten für Minderjährige hinzufügen 
-
+//Feature List:    
+//                  - Speicher soll speicherbar sein als datei! soll als Datenbak realisiert werden
+//                  - Speicher vom Letzten mal einlesen möglich machen!
+//                  - Config datei für globale, persistente einstellungen (Unter18, in ausbildung oder duali, Regelarbeitszeit
+//                  - ?Genaue SAP berechnungen mit eingliedern?
+//                  - Ordentliche Beschreibungen und Doku
+//                  - Wenn weniger als 4 stunden arbeitszeit dann ganzer gleitzeittag verbraucht (Mindestarbeitszeit)
+//                  - Kernarbeitszeiten checken lassen auch bei den oben. Mo bis Do: 9 bis 15 uhr Freitags: 9 bis 13 Uhr
+//
 //                  Bugs
 //                  - Wenn exit geschriben wird dann wird Wert zurückgesetzt 
-//                  - Bei 45 Minuten arbeitszeit soll gesagt werden wann 9 und 10 stunden erreicht werden
-//                  - 
+
+
+//Erledigt:
+//- Wenn heimgehzeit eingegeben dann soll stundenberechnung möglich sein
+//- 10 Stundengrenze einfügen
+//- Berechnungsmöglichkeiten für Minderjährige hinzufügen
+//- Bei 45 Minuten arbeitszeit soll gesagt werden wann 9 und 10 stunden erreicht werden
+
 class Zeitrechner()
 {
-    //Grundkonfigurationen
+    //Grundkonfigurationen, Grundlegende Programmbausteine 
     internal static TimeOnly[] Speicher = new TimeOnly[4];
     internal static TimeOnly standard = new TimeOnly(00, 00);
     internal static TimeOnly sechsUhr = new TimeOnly(6, 0);
     internal static TimeOnly siebenUhr = new TimeOnly(07, 00);
     internal static TimeOnly achtzehnUhr = new TimeOnly(18, 00);
     internal static TimeOnly zwanzigUhr = new TimeOnly(20, 00);
+
     internal static TimeSpan vierandhalbStunden = new TimeSpan(4,30,0);
     internal static TimeSpan sechsStunden = new TimeSpan(6, 0, 0);
     internal static TimeSpan achtStunden = new TimeSpan(8, 0, 0);
@@ -33,7 +40,7 @@ class Zeitrechner()
     internal static TimeSpan Minuten60 = new TimeSpan(0, 60, 0);
     internal static TimeSpan regelarbeitszeit = new TimeSpan(7,36,0);
 
-
+    //Globale Config / Profil 
     internal static bool ConfigDualiAktiv = true;
     internal static bool ConfigANAktiv = false;
     internal static bool ConfigMindJaehrigAktiv = false;
@@ -43,7 +50,7 @@ class Zeitrechner()
     public static void MenueBefehleAusgeben()
     {
         //Gibt die Programmübersicht aus
-        System.Console.WriteLine("Vefügbahre Befehle: \n0: Beendet das Programm \n1: Ankunftszeit eingeben \n2: Pausenstartzeit eingeben \n3: Pausenendzeiteingeben \n4: Heimgehzeit eingeben \n5: Zeitberechnung durchführen \n6: Appsettings anpassen \n7: Speicherstand ausgeben\n");
+        System.Console.WriteLine("Vefügbahre Befehle: \n0: Beendet das Programm \n1: Ankunftszeit eingeben \n2: Pausenstartzeit eingeben \n3: Pausenendzeiteingeben \n4: Heimgehzeit eingeben \n5: Zeitberechnung durchführen \n6: Appsettings anpassen \n7: Speicherstand ausgeben \n8: Tutorial starten\n");
     }
     
     protected static void SpeicherAusgeben()
@@ -99,34 +106,24 @@ class Zeitrechner()
         int eingabe = (int)Reader.readMenueChoiceFromConsole();
         switch (eingabe)
         {
-            case 0:
+            case 0: //Beenden des Programms 
                 System.Console.WriteLine("Das Programm wird beendet!");
                 Thread.Sleep(1000);
                 Console.WriteLine("Das Programm wurde erfolgreich Heruntergefahren!");
                 Thread.Sleep(400);
                 Environment.Exit(0);
                 return;
-            case 1:
-
+            
+            case 1: //Ankunftszeit eintragen 
                 Console.WriteLine("Einlesen der Ankunfstzeit gestartet!\n");
-                TimeOnly ZeitEingabe = Reader.readTimeFromConsole();
-                if (ZeitEingabe.Equals(Zeitrechner.standard))
-                {
-                    Speicher[0] = Speicher[0];
-                }
-                else {
-                    Console.WriteLine("Hat funktioniert");
-                    Thread.Sleep(1000);
-                    Speicher[0] = ZeitEingabe; //macht das überhaupt sinn? 
-                    
-                }
+                Speicher[0] = Reader.readTimeFromConsole();
                 Console.Clear();
                 SpeicherAusgeben(Speicher);
                 MenueBefehleAusgeben();
                 
                 break;
 
-            case 2:
+            case 2: //Pausenstart eintragen 
                 Console.WriteLine("Eingeben der Startzeit der Pause gestartet!\n");
                 Speicher[1] = Reader.readTimeFromConsole();
                 Console.Clear();
@@ -135,7 +132,7 @@ class Zeitrechner()
 
                 break;
 
-            case 3:
+            case 3: //pausenende Eintragen 
                 Console.WriteLine("Eingeben der Endzeit der Pause gestartet!\n");
                 Speicher[2] = Reader.readTimeFromConsole();
                 Console.Clear();
@@ -143,7 +140,7 @@ class Zeitrechner()
                 MenueBefehleAusgeben();
                 break;
 
-            case 4:
+            case 4: //Heimgehzeit eintragen
                 Console.WriteLine("Eingeben der Heimgehzeit gestartet!\n");
                 Speicher[3] = Reader.readTimeFromConsole();
                 Console.Clear();
@@ -151,14 +148,13 @@ class Zeitrechner()
                 MenueBefehleAusgeben();
                 break;
 
-            case 5:
-                
+            case 5: //Zeitberechnung durchführen
                 Console.WriteLine("\nWelche Zeitberechnung möchten sie Durchführen?");
                 berechnungsmöglichkeitenAusgeben();
                 break;
 
             case 6:
-
+                //Settings Anpassen
                 break;
 
             case 7://Hier vielleicht Details zum Speicher als Feature
@@ -167,11 +163,19 @@ class Zeitrechner()
                 MenueBefehleAusgeben();
                 break;
 
+            case 8:
+                Console.Clear();
+                SpeicherAusgeben(Speicher);
+                MenueBefehleAusgeben();
+                Console.WriteLine("Tutorial gestartet!");
+                Tutorial erklärung = new Tutorial();
+                break;
+
             case 9:
                 Console.Clear();
                 SpeicherAusgeben(Speicher);
                 MenueBefehleAusgeben();
-                Console.WriteLine("Ein Fehler ist aufgetreten! sie Wurden zurück ins Menü geschickt!");
+                Console.WriteLine("Ein Fehler ist aufgetreten! Sie wurden zurück ins Menü geschickt!");
                 break;
 
             default:
@@ -187,7 +191,7 @@ class Zeitrechner()
         
         Console.WriteLine("Die Berechnungsmöglichkeiten sind: ");
         Console.WriteLine("0: Zurück zum Menü \n1: Mit angegebenen Pausenzeiten berechnen \n2: Pausenzeitpunkt berechnen \n3: Mit 30 Minuten Pauschal ausrechnen \n4: Mit 45 Minuten Pauschal Ausrechnen \n5: Arbeitslänge ausrechnen und überprüfen\n6: Mit 60 Minuten Pauschal Ausrechnen\n");
-        Console.WriteLine("Das Berechnungsmodul wurde gesartet!\n");
+        Console.WriteLine("Das Berechnungsmodul wurde gestartet!\n");
         int menueEingabeBerechnung;
         
         do
@@ -229,7 +233,7 @@ class Zeitrechner()
                     break;
 
                 default:
-                    Console.WriteLine("keine Valide Möglichkeit eingegeben!");
+                    Console.WriteLine("Keine Valide Möglichkeit eingegeben!");
                     break;
 
 
